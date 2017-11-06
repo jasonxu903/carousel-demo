@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+
+    <title>Fade Demo</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul,
+        li {
+            list-style: none;
+            font-size: 0;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        img {
+            width: 320px;
+            height: 180px;
+        }
+
+        .carousel {
+            position: relative;
+            width: 320px;
+            height: 180px;
+        }
+
+        .ct li {
+            position: absolute;
+            display: none;
+        }
+
+        .ct li.default {
+            display: block;
+        }
+
+        .carousel .bullet {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .carousel .bullet li {
+            display: inline-block;
+            margin: 0 3px;
+            width: 30px;
+            height: 6px;
+            border-radius: 4px;
+            background-color: #ccc;
+            opacity: .6;
+            cursor: pointer;
+        }
+
+        .carousel .bullet li.active {
+            background-color: #000;
+        }
+
+        .carousel .pre,
+        .carousel .next {
+            position: absolute;
+            top: 50%;
+            margin-top: -15px;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            font-size: 20px;
+            text-align: center;
+            color: #fff;
+            opacity: .8;
+            z-index: 2;
+        }
+
+        .carousel .pre {
+            left: 10px;
+        }
+
+        .carousel .next {
+            right: 10px;
+        }
+
+        .carousel .pre:hover,
+        .carousel .next:hover {
+            background-color: rgba(102, 102, 102, .6);
+        }
+    </style>
+</head>
+<body>
+<div class="carousel">
+    <ul class="ct">
+        <li class="default"><img
+                src="http://cdn.jirengu.com/book.jirengu.com/img/2.jpg" alt="">
+        </li>
+        <li><img
+                src="http://cdn.jirengu.com/book.jirengu.com/img/3.jpg" alt="">
+        </li>
+        <li><img
+                src="http://cdn.jirengu.com/book.jirengu.com/img/4.jpg" alt="">
+        </li>
+        <li><img
+                src="http://cdn.jirengu.com/book.jirengu.com/img/5.jpg" alt="">
+        </li>
+    </ul>
+    <ul class="bullet">
+        <li class="active"></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <a href="#" class="pre"><</a>
+    <a href="#" class="next">></a>
+</div>
+<h1>fade 轮播</h1>
+<script>
+    var $imgs = $('.ct li')
+    var $preBtn = $('.pre')
+    var $nextBtn = $('.next')
+    var $bullets = $('.bullet li')
+
+    var imgCount = $imgs.length
+    var imgIdx = 0
+    var isAnimate = false
+
+    setInterval(function () {
+        skip(imgIdx + 1)
+    }, 2000)
+
+    $preBtn.click(function () {
+        skip(imgIdx - 1)
+    })
+    $nextBtn.click(function () {
+        skip(imgIdx + 1)
+    })
+    $bullets.click(function () {
+        var index = $(this).index()
+        $(this).addClass('active')
+            .siblings()
+            .removeClass('active')
+        skip(index)
+    })
+
+    function skip(idx) {
+        if (isAnimate) return
+        if (idx === imgCount) {
+            idx = 0
+        } else if (idx < 0) {
+            idx = imgCount - 1
+        }
+        isAnimate = true
+        $imgs.eq(imgIdx).fadeOut(500)
+        $imgs.eq(idx).fadeIn(500, function () {
+            isAnimate = false
+        })
+        imgIdx = idx
+        setBullet()
+    }
+
+    function setBullet() {
+        $bullets.removeClass('active')
+            .eq(imgIdx)
+            .addClass('active')
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+
+    <title>Carousel Demo 1</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul,
+        li {
+            list-style: none;
+            font-size: 0;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        img {
+            width: 320px;
+            height: 180px;
+        }
+
+        .clearfix:after {
+            display: block;
+            content: '';
+            clear: both;
+        }
+
+        .carousel {
+            width: 320px;
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .carousel .ct {
+            width: 1280px;
+        }
+
+        .carousel .ct li {
+            float: left;
+        }
+
+        .carousel .bullet {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .carousel .bullet li {
+            display: inline-block;
+            margin: 0 3px;
+            width: 30px;
+            height: 6px;
+            border-radius: 4px;
+            background-color: #ccc;
+            opacity: .6;
+            cursor: pointer;
+        }
+
+        .carousel .bullet li.active {
+            background-color: #fff;
+        }
+
+        .carousel .pre,
+        .carousel .next {
+            position: absolute;
+            top: 50%;
+            margin-top: -15px;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            font-size: 20px;
+            text-align: center;
+            color: #fff;
+            opacity: .8;
+        }
+
+        .carousel .pre {
+            left: 10px;
+        }
+
+        .carousel .next {
+            right: 10px;
+        }
+
+        .carousel .pre:hover,
+        .carousel .next:hover {
+            background-color: rgba(102, 102, 102, .6);
+        }
+    </style>
+</head>
+<body>
+<div class="carousel">
+    <ul class="ct clearfix">
+        <li data-id="1"><img
+                src="http://cdn.jirengu.com/book.jirengu.com/img/2.jpg" alt="">
+        </li>
+        <li data-id="2"><img
+                src="http://cdn.jirengu.com/book.jirengu.com/img/3.jpg" alt="">
+        </li>
+        <li data-id="3"><img
+                src="http://cdn.jirengu.com/book.jirengu.com/img/4.jpg" alt="">
+        </li>
+        <li data-id="4"><img
+                src="http://cdn.jirengu.com/book.jirengu.com/img/5.jpg" alt="">
+        </li>
+    </ul>
+    <ul class="bullet">
+        <li class="active"></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <a href="#" class="pre"><</a>
+    <a href="#" class="next">></a>
+</div>
+<h1>skip() 单抽象函数轮播</h1>
+<script>
+    var $ct = $('.ct')
+    var $imgs = $('.ct li')
+    var $preBtn = $('.pre')
+    var $nextBtn = $('.next')
+    var $bullets = $('.bullet > li')
+
+    var imgWidth = $('img').width()
+    var imgCount = $('img').length
+    var imgIdx = 0
+    var isAnimate = false
+
+    $ct.append($imgs.first().clone())
+    $ct.prepend($imgs.last().clone())
+    $ct.width((imgCount + 2) * imgWidth)
+    $ct.css('margin-left', -imgWidth)
+
+    setInterval(function () {
+        skip(imgIdx + 1)
+    }, 2000)
+
+    $preBtn.click(function () {
+        skip(imgIdx - 1)
+    })
+    $nextBtn.click(function () {
+        skip(imgIdx + 1)
+    })
+    $bullets.click(function () {
+        var index = $(this).index()
+        skip(index)
+    })
+
+    function skip(idx) {
+        if(isAnimate) return
+        isAnimate = true
+        $ct.animate({
+            marginLeft: -imgWidth * (idx + 1)
+        }, function () {
+            if(idx === imgCount){
+                idx = 0
+                $ct.css('margin-left', -imgWidth)
+            }else if(idx < 0){
+                idx = imgCount - 1
+                $ct.css('margin-left', -imgWidth * imgCount)
+            }
+            imgIdx = idx
+            setBullet()
+            isAnimate = false
+        })
+    }
+
+    function setBullet() {
+        $bullets.removeClass('active')
+            .eq(imgIdx)
+            .addClass('active')
+    }
+</script>
+</body>
+</html>
